@@ -1,4 +1,5 @@
 .DS_Store
+.autoharness/
 __pycache__/
 *.pyc
 # raw Overpass download, recreated by scripts/01_download_osm.py
