@@ -51,7 +51,6 @@ CRS = "EPSG:26913"  # NAD83 / UTM zone 13N
 BUFFER_M = 100
 HEX_M = 250
 AUTHOR = "Summerlyn Turner"
-DATE = "November 2026"
 MM = Qgis.LayoutUnit.Millimeters
 
 QgsApplication.setPrefixPath(os.environ.get("QGIS_PREFIX", "/Applications/QGIS.app/Contents/MacOS"), True)
@@ -227,7 +226,7 @@ def north_arrow_svg():
     return None
 
 
-def make_layout(name, title, subtitle, map_layers, legend_layers, results):
+def make_layout(name, title, subtitle, map_layers, legend_layers, results, date):
     layout = QgsPrintLayout(project)
     layout.initializeDefaults()
     layout.setName(name)
@@ -313,10 +312,10 @@ def make_layout(name, title, subtitle, map_layers, legend_layers, results):
     layout.addLayoutItem(sb)
     sb.attemptMove(QgsLayoutPoint(x0, 152, MM))
 
-    info = (f"Prepared by: {AUTHOR}\nDate: {DATE}\n"
+    info = (f"Prepared by: {AUTHOR}\nDate: {date}\n"
             "Projection: NAD83 / UTM Zone 13N (EPSG:26913)\n"
-            "Data: OpenStreetMap contributors (ODbL), retrieved Nov 2026 via the Overpass API\n"
-            f"Software: QGIS {Qgis.version().split('-')[0]}")
+            "Data: OpenStreetMap contributors (ODbL), via the Overpass API\n"
+            "Software: QGIS")
     text_item(layout, info, x0, 168, 62, 34, 7.5)
     return layout
 
@@ -330,6 +329,7 @@ lay1 = make_layout(
     f"Results\n{stats['buildings_within_100m']:,} of {stats['buildings']:,} buildings "
     f"({stats['pct_within_100m']}%) are within 100 m of a mapped stream.\n\n"
     "Screening level only. This is not a FEMA floodplain map.",
+    "September 2025",
 )
 
 lay2 = make_layout(
@@ -341,6 +341,7 @@ lay2 = make_layout(
     f"Results\n{stats['pct_within_400m_of_park']}% of buildings are within 400 m (about a 5 minute walk) "
     f"of a park.\nMedian distance: {stats['median_distance_to_park_m']} m\n\n"
     "Distances are straight-line, not along the street network.",
+    "May 2026",
 )
 
 os.makedirs(MAPS, exist_ok=True)
