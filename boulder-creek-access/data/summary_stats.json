@@ -1,0 +1,9 @@
+{
+  "buildings": 14023,
+  "buildings_within_100m": 1420,
+  "parks": 53,
+  "stream_segments": 114,
+  "median_distance_to_park_m": 234,
+  "pct_within_400m_of_park": 80.7,
+  "pct_within_100m": 10.1
+}

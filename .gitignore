@@ -1,0 +1,10 @@
+.DS_Store
+__pycache__/
+*.pyc
+# raw Overpass download, recreated by scripts/01_download_osm.py
+boulder-creek-access/data/osm_boulder.json
+# QGIS temp/lock files
+*.qgz~
+*.qgs~
+*_attachments.zip
+.qgis*/
