@@ -1,0 +1,120 @@
+:root {
+  --ink: #1d2327;
+  --muted: #5c6670;
+  --line: #d9dee2;
+  --panel: #ffffff;
+  --page: #eef1f3;
+  --accent: #08519c;
+  --focus: #f9a01b;
+  --font: "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; margin: 0; }
+
+body {
+  font-family: var(--font);
+  color: var(--ink);
+  background: var(--page);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  height: 100%;
+}
+
+.panel {
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  overflow-y: auto;
+  padding: 20px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+#map { height: 100%; min-height: 0; background: #e8ebee; }
+
+.kicker {
+  margin: 0 0 2px;
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+h1 { margin: 0 0 6px; font-size: 22px; line-height: 1.2; }
+h2 { margin: 0 0 8px; font-size: 13px; letter-spacing: 0.03em; text-transform: uppercase; color: var(--muted); }
+.lede { margin: 0; color: var(--muted); }
+.note { margin: 0 0 6px; color: var(--muted); font-size: 12.5px; }
+
+.figures {
+  display: grid;
+  gap: 10px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 12px 0;
+}
+.figures div { display: grid; grid-template-columns: 92px 1fr; align-items: baseline; gap: 10px; }
+.num { white-space: nowrap; font-size: 20px; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+.cap { color: var(--muted); font-size: 12.5px; }
+
+.toggle { display: flex; gap: 6px; margin-bottom: 10px; }
+.toggle label {
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 6px 8px;
+  cursor: pointer;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.toggle label:has(input:checked) { border-color: var(--accent); background: #eef4fa; }
+
+.legend { display: grid; gap: 3px; margin-bottom: 10px; font-size: 12.5px; }
+.legend .row { display: flex; align-items: center; gap: 8px; }
+.legend .sw { width: 22px; height: 12px; border: 1px solid rgba(0, 0, 0, 0.15); flex: none; }
+
+.layers { display: grid; gap: 4px; font-size: 13px; }
+.layers label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+
+.scatter svg { width: 100%; height: auto; display: block; }
+.scatter .dot { cursor: pointer; stroke: #fff; stroke-width: 0.8; }
+.scatter .dot.on { stroke: var(--ink); stroke-width: 2; }
+.scatter text { font-size: 10px; fill: var(--muted); font-family: var(--font); }
+.scatter .axis { stroke: #b8c0c7; stroke-width: 1; }
+.scatter .grid { stroke: #eceff1; stroke-width: 1; }
+
+.detail { border: 1px solid var(--line); border-radius: 4px; padding: 10px 12px; }
+.detail h3 { margin: 0 0 6px; font-size: 16px; }
+.detail table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+.detail td { padding: 2px 0; }
+.detail td:last-child { text-align: right; font-weight: 600; }
+
+details { font-size: 12.5px; color: var(--muted); }
+details summary { cursor: pointer; color: var(--ink); font-weight: 600; font-size: 13px; }
+details ol { padding-left: 18px; margin: 8px 0; }
+details p { margin: 6px 0; }
+
+footer { margin-top: auto; font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 10px; }
+
+input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* muted basemap so the data reads first */
+.leaflet-tile-pane { filter: grayscale(1) contrast(0.9) brightness(1.06); }
+
+.leaflet-tooltip.area-tip { font-family: var(--font); font-size: 12px; padding: 3px 6px; }
+.leaflet-popup-content { font-family: var(--font); font-size: 13px; margin: 10px 12px; }
+.chip { display: inline-block; padding: 1px 6px; border-radius: 3px; color: #fff; font-size: 11px; margin: 2px 2px 0 0; }
+
+@media (max-width: 760px) {
+  .app { grid-template-columns: minmax(0, 1fr); grid-template-rows: 58vh auto; height: auto; }
+  #map { grid-row: 1; height: 58vh; }
+  .panel { grid-row: 2; border-right: 0; border-top: 1px solid var(--line); overflow: visible; }
+}

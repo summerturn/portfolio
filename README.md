@@ -23,14 +23,14 @@ Buildings within 100 m of Boulder Creek and its tributaries, and walking distanc
 | ![](boulder-creek-access/maps/map1_stream_exposure.png) | ![](boulder-creek-access/maps/map2_park_access.png) |
 
 ### [Chicago: 'L' Station Access by Community Area](chicago-transit-access/)
-*October 2025. QGIS, PyQGIS, City of Chicago Data Portal*
+*October 2025. QGIS, PyQGIS, Leaflet web map, City of Chicago Data Portal*
 
-Half-mile walksheds around all 144 CTA 'L' stations, coverage by community area, and a comparison with the city's hardship index.
+Half-mile walksheds around all 144 CTA 'L' stations, coverage by community area, and a comparison with the city's hardship index, published as an interactive web map.
 
-| [Station walksheds](chicago-transit-access/maps/map1_station_walksheds.pdf) | [Hardship and access](chicago-transit-access/maps/map2_hardship_access.pdf) |
-| --- | --- |
-| ![](chicago-transit-access/maps/map1_station_walksheds.png) | ![](chicago-transit-access/maps/map2_hardship_access.png) |
+**[Open the web map](https://summerturn.github.io/portfolio/chicago-transit-access/webmap/)**
+
+[![Chicago web map](chicago-transit-access/webmap/preview.png)](https://summerturn.github.io/portfolio/chicago-transit-access/webmap/)
 
 ## Skills
 
-QGIS print layouts and Processing toolbox, PyQGIS, CRS selection and reprojection (UTM, State Plane), buffers and overlay analysis, nearest-neighbor joins, hexagon grids, attribute and spatial joins, graduated and categorized symbology, network analysis (NetworkX, OSMnx), Monte Carlo simulation, Census ACS data, GeoPackage, Python (GeoPandas, pandas, matplotlib).
+QGIS print layouts and Processing toolbox, PyQGIS, CRS selection and reprojection (UTM, State Plane), buffers and overlay analysis, nearest-neighbor joins, hexagon grids, attribute and spatial joins, graduated and categorized symbology, network analysis (NetworkX, OSMnx), Monte Carlo simulation, Census ACS data, GeoPackage, web mapping (Leaflet, GeoJSON), Python (GeoPandas, pandas, matplotlib), JavaScript.

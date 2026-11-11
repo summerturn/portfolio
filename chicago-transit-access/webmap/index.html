@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chicago 'L' Station Access</title>
+  <meta name="description" content="Share of each Chicago community area within a half mile of a CTA 'L' station, compared with the city's hardship index.">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="panel" aria-label="Map controls and results">
+      <header>
+        <p class="kicker">Chicago community areas</p>
+        <h1>'L' Station Access</h1>
+        <p class="lede">How much of each community area is within a half mile (2,640 ft) of a CTA 'L' station, and whether access lines up with economic hardship.</p>
+      </header>
+
+      <section class="figures" aria-label="Key results">
+        <div><span class="num" id="stat-cover">–</span><span class="cap">of the city's land is within a half mile of a station</span></div>
+        <div><span class="num" id="stat-none">–</span><span class="cap">community areas with no coverage at all</span></div>
+        <div><span class="num" id="stat-r">–</span><span class="cap">correlation between coverage and hardship</span></div>
+      </section>
+
+      <section>
+        <h2>Map theme</h2>
+        <div class="toggle" role="radiogroup" aria-label="Map theme">
+          <label><input type="radio" name="theme" value="coverage" id="theme-coverage" checked> Station coverage</label>
+          <label><input type="radio" name="theme" value="hardship" id="theme-hardship"> Hardship index</label>
+        </div>
+        <div id="legend" class="legend"></div>
+        <div class="layers">
+          <label><input type="checkbox" id="lyr-walk" checked> Half-mile walksheds</label>
+          <label><input type="checkbox" id="lyr-lines" checked> 'L' lines</label>
+          <label><input type="checkbox" id="lyr-stations" checked> Stations</label>
+        </div>
+      </section>
+
+      <section>
+        <h2>Coverage vs. hardship</h2>
+        <p class="note">Each dot is a community area. Hover or click a dot to find it on the map.</p>
+        <div id="scatter" class="scatter"></div>
+      </section>
+
+      <section id="detail" class="detail" aria-live="polite">
+        <p class="note">Click a community area on the map for its numbers.</p>
+      </section>
+
+      <details>
+        <summary>Method and limitations</summary>
+        <ol>
+          <li>Collapsed the CTA stop list to one point per station (144 stations).</li>
+          <li>Buffered stations by 2,640 ft in NAD83 / Illinois East (EPSG:3435) and dissolved.</li>
+          <li>Calculated the share of each community area inside the buffer (QGIS Overlap Analysis) and counted stations per area.</li>
+          <li>Joined the ACS 2008-2012 socioeconomic table on community area number.</li>
+          <li>Exported the results from QGIS to GeoJSON for this map.</li>
+        </ol>
+        <p>Walksheds are straight-line, not along streets. Coverage is by land area, not population. The hardship index (1 = least, 100 = most) is from ACS 2008-2012 and combines crowding, poverty, unemployment, education, dependency and income. Buses are not included.</p>
+        <p>Data: City of Chicago Data Portal, Chicago Transit Authority, U.S. Census Bureau. Basemap © OpenStreetMap contributors.</p>
+      </details>
+
+      <footer>Summerlyn Turner · October 2025 · QGIS and Leaflet</footer>
+    </aside>
+    <main id="map" aria-label="Map of Chicago community areas"></main>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="app.js"></script>
+</body>
+</html>
