@@ -31,6 +31,9 @@ from qgis.core import (
     QgsPalLayerSettings,
     QgsPrintLayout,
     QgsProject,
+    QgsProperty,
+    QgsSimpleLineSymbolLayer,
+    QgsSymbolLayer,
     QgsRectangle,
     QgsRendererRange,
     QgsTextBufferSettings,
@@ -84,6 +87,13 @@ streams_full = streams  # keep full lines so the buffer is right at the edges
 streams = run("native:clip", {"INPUT": streams_full, "OVERLAY": study})
 parks_clip = None  # parks outside the box still count as "nearest", only clip for display
 
+# reference layers for the park map basemap
+roads = run("native:clip", {"INPUT": raw("roads"), "OVERLAY": study})
+campus = run("native:extractbyexpression", {
+    "INPUT": raw("campus"),
+    "EXPRESSION": "\"name\" LIKE '%(Main Campus)%' OR \"name\" LIKE '%(East Campus)%'"})
+campus = run("native:clip", {"INPUT": campus, "OVERLAY": study})
+
 # keep buildings whose centroid falls inside the study area
 buildings = run("native:extractbyexpression", {
     "INPUT": buildings_all,
@@ -127,12 +137,13 @@ print(json.dumps(stats, indent=2))
 # save every analysis layer into one GeoPackage
 for lyr, name in [(study, "study_area"), (streams, "streams"), (parks_clip, "parks"), (buildings, "buildings"),
                   (buffer, "stream_buffer_100m"), (near_stream, "buildings_within_100m"),
-                  (nearest, "building_nearest_park"), (hex_summary, "park_distance_hex")]:
+                  (nearest, "building_nearest_park"), (hex_summary, "park_distance_hex"),
+                  (roads, "roads"), (campus, "campus")]:
     lyr.setName(name)
 if os.path.exists(GPKG):
     os.remove(GPKG)
 processing.run("native:package", {"LAYERS": [study, streams, parks_clip, buildings, buffer, near_stream,
-                                             nearest, hex_summary],
+                                             nearest, hex_summary, roads, campus],
                                   "OUTPUT": GPKG, "OVERWRITE": True, "SAVE_STYLES": False})
 with open(os.path.join(DATA, "summary_stats.json"), "w") as f:
     json.dump(stats, f, indent=2)
@@ -158,6 +169,8 @@ L_near = load("buildings_within_100m", "Buildings within 100 m of a stream")
 L_streams = load("streams", "Streams and creeks")
 L_parks = load("parks", "Parks")
 L_hex = load("park_distance_hex", "Mean distance to nearest park")
+L_roads = load("roads", "Major roads")
+L_campus = load("campus", "CU Boulder campus")
 
 L_study.renderer().setSymbol(QgsFillSymbol.createSimple(
     {"style": "no", "outline_color": "0,0,0", "outline_width": "0.5"}))
@@ -197,7 +210,63 @@ for lo, hi, color, label in [(0, 200, "26,152,80", "0 - 200 m"), (200, 400, "166
     sym = QgsFillSymbol.createSimple({"color": color, "outline_color": "255,255,255", "outline_width": "0.2"})
     ranges.append(QgsRendererRange(lo, hi, sym, label))
 L_hex.setRenderer(QgsGraduatedSymbolRenderer("distance_mean", ranges))
-L_hex.setOpacity(0.85)
+L_hex.setOpacity(0.75)
+
+# roads: white casing under a dark line, width by road class
+width_expr = ("CASE WHEN \"highway\" IN ('motorway','trunk','primary') THEN {a} "
+              "WHEN \"highway\" = 'secondary' THEN {b} ELSE {c} END")
+road_sym = QgsLineSymbol.createSimple({"line_color": "255,255,255", "line_width": "1.2"})
+road_sym.symbolLayer(0).setDataDefinedProperty(
+    QgsSymbolLayer.Property.StrokeWidth, QgsProperty.fromExpression(width_expr.format(a=1.3, b=0.95, c=0.65)))
+inner = QgsSimpleLineSymbolLayer(QColor(70, 70, 70), 0.6)
+inner.setDataDefinedProperty(
+    QgsSymbolLayer.Property.StrokeWidth, QgsProperty.fromExpression(width_expr.format(a=0.7, b=0.45, c=0.25)))
+road_sym.appendSymbolLayer(inner)
+road_sym.symbolLayer(0).setRenderingPass(0)
+inner.setRenderingPass(1)
+L_roads.renderer().setSymbol(road_sym)
+L_roads.renderer().setUsingSymbolLevels(True)  # all casings first, then all centre lines
+
+road_fmt = QgsTextFormat()
+road_fmt.setFont(QFont("Arial"))
+road_fmt.setSize(6.5)
+road_fmt.setColor(QColor(40, 40, 40))
+road_buf = QgsTextBufferSettings()
+road_buf.setEnabled(True)
+road_buf.setSize(0.7)
+road_buf.setColor(QColor(255, 255, 255))
+road_fmt.setBuffer(road_buf)
+road_pal = QgsPalLayerSettings()
+road_pal.fieldName = "CASE WHEN \"highway\" IN ('motorway','trunk','primary','secondary') THEN \"name\" END"
+road_pal.isExpression = True
+road_pal.placement = Qgis.LabelPlacement.Line
+road_pal.setFormat(road_fmt)
+road_pal.lineSettings().setMergeLines(True)
+road_pal.thinningSettings().setMinimumFeatureSize(25)
+L_roads.setLabeling(QgsVectorLayerSimpleLabeling(road_pal))
+L_roads.setLabelsEnabled(True)
+
+L_campus.renderer().setSymbol(QgsFillSymbol.createSimple(
+    {"style": "no", "outline_color": "60,60,60", "outline_style": "dash", "outline_width": "0.45"}))
+campus_fmt = QgsTextFormat()
+cf = QFont("Arial")
+cf.setBold(True)
+campus_fmt.setFont(cf)
+campus_fmt.setSize(7.5)
+campus_fmt.setColor(QColor(40, 40, 40))
+campus_buf = QgsTextBufferSettings()
+campus_buf.setEnabled(True)
+campus_buf.setSize(0.9)
+campus_buf.setColor(QColor(255, 255, 255))
+campus_fmt.setBuffer(campus_buf)
+campus_pal = QgsPalLayerSettings()
+campus_pal.fieldName = ("CASE WHEN \"name\" LIKE '%Main Campus%' THEN 'CU Boulder' || '\\n' || 'Main Campus' "
+                        "WHEN \"name\" LIKE '%East Campus%' THEN 'CU East Campus' END")
+campus_pal.isExpression = True
+campus_pal.placement = Qgis.LabelPlacement.OverPoint
+campus_pal.setFormat(campus_fmt)
+L_campus.setLabeling(QgsVectorLayerSimpleLabeling(campus_pal))
+L_campus.setLabelsEnabled(True)
 
 
 # ---------------- layouts ----------------
@@ -291,10 +360,10 @@ def make_layout(name, title, subtitle, map_layers, legend_layers, results, date)
         style.setTextFormat(tf)
         legend.setStyle(st, style)
     layout.addLayoutItem(legend)
-    legend.attemptMove(QgsLayoutPoint(x0, 50, MM))
+    legend.attemptMove(QgsLayoutPoint(x0, 46, MM))
     legend.adjustBoxSize()
 
-    text_item(layout, results, x0, 118, 62, 30, 8.5)
+    text_item(layout, results, x0, 127, 62, 26, 8.5)
 
     sb = QgsLayoutItemScaleBar(layout)
     sb.setStyle("Single Box")
@@ -310,13 +379,13 @@ def make_layout(name, title, subtitle, map_layers, legend_layers, results, date)
     sbf.setSize(8)
     sb.setTextFormat(sbf)
     layout.addLayoutItem(sb)
-    sb.attemptMove(QgsLayoutPoint(x0, 152, MM))
+    sb.attemptMove(QgsLayoutPoint(x0, 156, MM))
 
     info = (f"Prepared by: {AUTHOR}\nDate: {date}\n"
             "Projection: NAD83 / UTM Zone 13N (EPSG:26913)\n"
             "Data: OpenStreetMap contributors (ODbL), via the Overpass API\n"
             "Software: QGIS")
-    text_item(layout, info, x0, 168, 62, 34, 7.5)
+    text_item(layout, info, x0, 171, 62, 30, 7.5)
     return layout
 
 
@@ -336,8 +405,8 @@ lay2 = make_layout(
     "Map 2 - Park access",
     "Distance to the Nearest Park, Central Boulder, Colorado",
     f"Mean straight-line distance from building centroids to the nearest park, summarized by {HEX_M} m hexagon",
-    [L_study, L_parks, L_hex, L_bldg],
-    [L_hex, L_parks, L_study],
+    [L_study, L_campus, L_roads, L_streams, L_parks, L_hex, L_bldg],
+    [L_hex, L_parks, L_roads, L_streams, L_campus, L_study],
     f"Results\n{stats['pct_within_400m_of_park']}% of buildings are within 400 m (about a 5 minute walk) "
     f"of a park.\nMedian distance: {stats['median_distance_to_park_m']} m\n\n"
     "Distances are straight-line, not along the street network.",

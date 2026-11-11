@@ -4,6 +4,7 @@ __pycache__/
 *.pyc
 # raw Overpass download, recreated by scripts/01_download_osm.py
 boulder-creek-access/data/osm_boulder.json
+boulder-creek-access/data/osm_basemap.json
 # QGIS temp/lock files
 *.qgz~
 *.qgs~

@@ -28,6 +28,7 @@ All analysis was done in NAD83 / UTM Zone 13N (EPSG:26913) so distances are in m
 3. Create a 250 m hexagon grid over the study area (Create Grid).
 4. Average the distance per hexagon (Join Attributes by Location (Summary), mean). Hexagons with fewer than 3 buildings are dropped.
 5. Graduated symbology with manual breaks at 200, 400 and 800 m.
+6. Reference layers for orientation: major roads (motorway to tertiary) with street name labels, Boulder Creek and its tributaries, and the CU Boulder campus boundaries, all from OSM.
 
 ## Limitations
 
@@ -40,7 +41,7 @@ All analysis was done in NAD83 / UTM Zone 13N (EPSG:26913) so distances are in m
 | Path | Contents |
 | --- | --- |
 | `boulder_analysis.qgz` | QGIS project with styled layers and both print layouts |
-| `data/osm_raw.gpkg` | OSM extract (study area, streams, parks, buildings) in WGS 84 |
+| `data/osm_raw.gpkg` | OSM extract (study area, streams, parks, buildings, roads, campus) in WGS 84 |
 | `data/boulder_analysis.gpkg` | Analysis outputs in EPSG:26913 |
 | `data/summary_stats.json` | Numbers quoted on the maps |
 | `scripts/01_download_osm.py` | Downloads the OSM data through the Overpass API |
