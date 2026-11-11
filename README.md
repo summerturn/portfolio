@@ -2,21 +2,35 @@
 
 Summerlyn Turner
 
-Mapping and spatial analysis work done in QGIS. Each project folder has the QGIS project file, the data, the scripts used to process it, and the exported maps.
+Mapping, spatial analysis and network analysis projects. Each folder has its own README with methods, data sources and limitations.
 
 ## Projects
 
+### [The Bridge Divides: Industrial Canal Crossing Vulnerability](industrial-canal-network/)
+*Georgia Tech OMSA Practicum, Summer 2026. Python, OSMnx, NetworkX, GeoPandas*
+
+Network analysis of the five road crossings over the Industrial Canal in New Orleans. Tests every single, paired and full closure, runs a 100-trial Monte Carlo failure comparison, and links results to bridge records, storm surge data and ACS demographics.
+
+![Industrial Canal crossings](industrial-canal-network/figures/canal_critical_link_map.png)
+
 ### [Central Boulder: Stream Exposure and Park Access](boulder-creek-access/)
+*May 2026. QGIS, PyQGIS, OpenStreetMap*
 
-Two proximity analyses of central Boulder, Colorado using OpenStreetMap data.
+Buildings within 100 m of Boulder Creek and its tributaries, and walking distance to the nearest park summarized on a 250 m hexagon grid.
 
-| Map | Question |
+| [Stream exposure](boulder-creek-access/maps/map1_stream_exposure.pdf) | [Park access](boulder-creek-access/maps/map2_park_access.pdf) |
 | --- | --- |
-| [Buildings within 100 m of streams](boulder-creek-access/maps/map1_stream_exposure.pdf) | How many buildings sit close to Boulder Creek and its tributaries? |
-| [Distance to the nearest park](boulder-creek-access/maps/map2_park_access.pdf) | Which parts of the area are more than a 5 minute walk from a park? |
+| ![](boulder-creek-access/maps/map1_stream_exposure.png) | ![](boulder-creek-access/maps/map2_park_access.png) |
 
-![Buildings within 100 m of streams](boulder-creek-access/maps/map1_stream_exposure.png)
+### [Chicago: 'L' Station Access by Community Area](chicago-transit-access/)
+*October 2025. QGIS, PyQGIS, City of Chicago Data Portal*
 
-![Distance to the nearest park](boulder-creek-access/maps/map2_park_access.png)
+Half-mile walksheds around all 144 CTA 'L' stations, coverage by community area, and a comparison with the city's hardship index.
 
-**Skills:** QGIS print layouts, Processing toolbox (buffer, extract by location, join by nearest, hexagon grids, join by location summary), PyQGIS, CRS handling and reprojection, GeoPackage, graduated symbology, cartographic design.
+| [Station walksheds](chicago-transit-access/maps/map1_station_walksheds.pdf) | [Hardship and access](chicago-transit-access/maps/map2_hardship_access.pdf) |
+| --- | --- |
+| ![](chicago-transit-access/maps/map1_station_walksheds.png) | ![](chicago-transit-access/maps/map2_hardship_access.png) |
+
+## Skills
+
+QGIS print layouts and Processing toolbox, PyQGIS, CRS selection and reprojection (UTM, State Plane), buffers and overlay analysis, nearest-neighbor joins, hexagon grids, attribute and spatial joins, graduated and categorized symbology, network analysis (NetworkX, OSMnx), Monte Carlo simulation, Census ACS data, GeoPackage, Python (GeoPandas, pandas, matplotlib).

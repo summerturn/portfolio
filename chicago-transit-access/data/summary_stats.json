@@ -1,0 +1,11 @@
+{
+  "community_areas": 77,
+  "stations": 144,
+  "pct_city_area_in_walkshed": 24.9,
+  "areas_with_no_station_within_half_mile": 23,
+  "areas_under_10pct": 32,
+  "areas_50pct_or_more": 22,
+  "mean_hardship_under_10pct": 47.5,
+  "mean_hardship_50pct_or_more": 45.0,
+  "pearson_r_pct_vs_hardship": -0.03
+}

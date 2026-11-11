@@ -398,7 +398,7 @@ lay1 = make_layout(
     f"Results\n{stats['buildings_within_100m']:,} of {stats['buildings']:,} buildings "
     f"({stats['pct_within_100m']}%) are within 100 m of a mapped stream.\n\n"
     "Screening level only. This is not a FEMA floodplain map.",
-    "September 2025",
+    "May 2026",
 )
 
 lay2 = make_layout(
